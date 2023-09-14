@@ -10,6 +10,9 @@
         public string ContactEmail { get; set; }
         public string ContactNumber { get; set; }
 
+        public int AdressId { get; set; }
+        public virtual Adress Adress { get; set; }
+        public virtual List<Dish> Dishes { get; set; }
 
     }
 }
