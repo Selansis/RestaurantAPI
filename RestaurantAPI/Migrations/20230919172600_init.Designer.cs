@@ -11,7 +11,7 @@ using RestaurantAPI.Entities;
 namespace RestaurantAPI.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    [Migration("20230914162626_init")]
+    [Migration("20230919172600_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -65,11 +65,8 @@ namespace RestaurantAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("RestaurandId")
-                        .HasColumnType("int");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
                     b.Property<int>("RestaurantId")
                         .HasColumnType("int");
@@ -92,8 +89,9 @@ namespace RestaurantAPI.Migrations
                     b.Property<int>("AdressId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Category")
-                        .HasColumnType("int");
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactEmail")
                         .IsRequired()
@@ -107,7 +105,7 @@ namespace RestaurantAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("HasDelievery")
+                    b.Property<bool>("HasDelivery")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")

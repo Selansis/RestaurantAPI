@@ -1,20 +1,28 @@
-﻿using RestaurantAPI.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using RestaurantAPI.Entities;
 
 namespace RestaurantAPI
 {
     public class RestaurantSeeder
     {
         private readonly RestaurantDbContext _dbContext;
+
         public RestaurantSeeder(RestaurantDbContext dbContext)
         {
             _dbContext = dbContext;
         }
         public void Seed()
         {
-            if(_dbContext.Database.CanConnect())
+            if (_dbContext.Database.CanConnect())
             {
-                if(_dbContext.Restaurants.Any())
+                if (!_dbContext.Restaurants.Any())
                 {
                     var restaurants = GetRestaurants();
                     _dbContext.Restaurants.AddRange(restaurants);
@@ -22,6 +30,8 @@ namespace RestaurantAPI
                 }
             }
         }
+
+
         private IEnumerable<Restaurant> GetRestaurants()
         {
             var restaurants = new List<Restaurant>()
@@ -33,19 +43,20 @@ namespace RestaurantAPI
                     Description =
                         "KFC (short for Kentucky Fried Chicken) is an American fast food restaurant chain headquartered in Louisville, Kentucky, that specializes in fried chicken.",
                     ContactEmail = "contact@kfc.com",
+                    ContactNumber = "contact@kfc.com",
                     HasDelivery = true,
                     Dishes = new List<Dish>()
                     {
                         new Dish()
                         {
                             Name = "Nashville Hot Chicken",
-                            Price = 10.30M,
+                            Price = 10.30,
                         },
 
                         new Dish()
                         {
                             Name = "Chicken Nuggets",
-                            Price = 5.30M,
+                            Price = 5.30,
                         },
                     },
                     Adress = new Adress()
@@ -62,6 +73,7 @@ namespace RestaurantAPI
                     Description =
                         "McDonald's Corporation (McDonald's), incorporated on December 21, 1964, operates and franchises McDonald's restaurants.",
                     ContactEmail = "contact@mcdonald.com",
+                    ContactNumber = "contact@kfc.com",
                     HasDelivery = true,
                     Adress = new Adress()
                     {
@@ -71,6 +83,7 @@ namespace RestaurantAPI
                     }
                 }
             };
+
             return restaurants;
         }
     }
