@@ -51,12 +51,16 @@ namespace RestaurantAPI
                         {
                             Name = "Nashville Hot Chicken",
                             Price = 10.30,
+                            Description = "git danie",
+                        
                         },
 
                         new Dish()
                         {
                             Name = "Chicken Nuggets",
                             Price = 5.30,
+                            Description = "całkiem niezłe",
+
                         },
                     },
                     Adress = new Adress()
