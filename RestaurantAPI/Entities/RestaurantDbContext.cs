@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace RestaurantAPI.Entities
 {

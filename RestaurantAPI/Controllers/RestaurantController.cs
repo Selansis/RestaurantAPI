@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RestaurantAPI.Entities;
+using RestaurantAPI.Models;
 
 namespace RestaurantAPI.Controllers
 {
@@ -7,19 +10,26 @@ namespace RestaurantAPI.Controllers
     public class RestaurantController : ControllerBase
     {
         private readonly RestaurantDbContext _dbContext;
-        public RestaurantController(RestaurantDbContext dbContext)
+        private readonly IMapper _mapper;
+        public RestaurantController(RestaurantDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
-        public ActionResult<IEnumerable<Restaurant>> GetAll()
+        public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
             var restaurants = _dbContext
                 .Restaurants
+                .Include(r => r.Adress)
+                .Include(r => r.Dishes)
                 .ToList();
+
+            var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);
+
             return Ok(restaurants);
         }
         [HttpGet("{id}")]
-        public ActionResult<Restaurant> Get([FromRoute]int id)
+        public ActionResult<RestaurantDto> Get([FromRoute]int id)
         {
             var restaurant = _dbContext
                 .Restaurants
