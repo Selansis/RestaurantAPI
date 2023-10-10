@@ -3,19 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Models;
+using RestaurantAPI.Services;
 
 namespace RestaurantAPI.Controllers
 {
     [Route("api/restaurant")]
     public class RestaurantController : ControllerBase
     {
-        private readonly RestaurantDbContext _dbContext;
-        private readonly IMapper _mapper;
-        public RestaurantController(RestaurantDbContext dbContext, IMapper mapper)
+        private readonly IRestaurantService restaurantService;
+        public RestaurantController(IRestaurantService restaurantService)
         {
-            _dbContext = dbContext;
-            _mapper = mapper;
+          _restaurantService = restaurantService;
         }
+
         [HttpPost]
         public ActionResult CreateRestaurant([FromBody] CreateRestaurantDto dto)
         {
@@ -23,9 +23,7 @@ namespace RestaurantAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var restaurant = _mapper.Map<Restaurant>(dto);
-            _dbContext.Restaurants.Add(restaurant);
-            _dbContext.SaveChanges();
+            _restaurantService.Create(dto);
             return Created($"/api/restaurant/{restaurant.Id}", null);
         }
 
@@ -37,11 +35,6 @@ namespace RestaurantAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<RestaurantDto>> GetAll()
         {
-            var restaurants = _dbContext
-                .Restaurants
-                .Include(r => r.Adress)
-                .Include(r => r.Dishes)
-                .ToList();
 
             var restaurantsDtos = _mapper.Map<List<RestaurantDto>>(restaurants);
 
@@ -50,9 +43,6 @@ namespace RestaurantAPI.Controllers
         [HttpGet("{id}")]
         public ActionResult<RestaurantDto> Get([FromRoute]int id)
         {
-            var restaurant = _dbContext
-                .Restaurants
-                .FirstOrDefault(r => r.Id == id);
 
             if(restaurant is null)
             {
