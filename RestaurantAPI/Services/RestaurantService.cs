@@ -1,5 +1,14 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using RestaurantAPI.Entities;
 using RestaurantAPI.Models;
 
@@ -9,7 +18,7 @@ namespace RestaurantAPI.Services
     {
         RestaurantDto GetById(int id);
         IEnumerable<RestaurantDto> GetAll();
-        void Create(CreateRestaurantDto dto);
+        int Create(CreateRestaurantDto dto);
 
     }
 
@@ -52,12 +61,14 @@ namespace RestaurantAPI.Services
             return restaurantsDtos;
         }
 
-        public void Create(CreateRestaurantDto dto)
+        public int Create(CreateRestaurantDto dto)
         {
             var restaurant = _mapper.Map<Restaurant>(dto);
             _dbContext.Restaurants.Add(restaurant);
             _dbContext.SaveChanges();
+            return restaurant.Id;
 
         }
     }
 
+}
