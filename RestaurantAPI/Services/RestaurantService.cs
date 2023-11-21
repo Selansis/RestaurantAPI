@@ -7,35 +7,39 @@ namespace RestaurantAPI.Services
 {
     public interface IRestaurantService
     {
-        RestaurantDto Get(int id);
+        RestaurantDto GetById(int id);
         IEnumerable<RestaurantDto> GetAll();
         void Create(CreateRestaurantDto dto);
 
     }
-    public class RestaurantService
+
+    public class RestaurantService : IRestaurantService
     {
         private RestaurantDbContext _dbContext;
         private IMapper _mapper;
 
-        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper) 
-        { 
-            _dbContext=dbContext;
-            _mapper=mapper;
+        public RestaurantService(RestaurantDbContext dbContext, IMapper mapper)
+        {
+            _dbContext = dbContext;
+            _mapper = mapper;
         }
+
         public RestaurantDto GetById(int id)
-        { 
+        {
             var restaurant = _dbContext
                 .Restaurants
                 .Include(r => r.Adress)
                 .Include(r => r.Dishes)
                 .FirstOrDefault(r => r.Id == id);
-            if(restaurant == null)
+            if (restaurant == null)
             {
                 return null;
             }
+
             var result = _mapper.Map<RestaurantDto>(restaurant);
             return result;
         }
+
         public IEnumerable<RestaurantDto> GetAll()
         {
             var restaurants = _dbContext
@@ -48,14 +52,12 @@ namespace RestaurantAPI.Services
             return restaurantsDtos;
         }
 
-        public void Create(RestaurantDto dto)
+        public void Create(CreateRestaurantDto dto)
         {
             var restaurant = _mapper.Map<Restaurant>(dto);
             _dbContext.Restaurants.Add(restaurant);
             _dbContext.SaveChanges();
+
         }
-
-
-
     }
-}
+
